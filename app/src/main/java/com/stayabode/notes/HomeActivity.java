@@ -2,10 +2,9 @@ package com.stayabode.notes;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-public class HomeActivity extends AppCompatActivity
+public class HomeActivity extends CustomActionBarActivity
 {
 
     @Override
@@ -20,7 +19,7 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                
+
             }
         });
     }
