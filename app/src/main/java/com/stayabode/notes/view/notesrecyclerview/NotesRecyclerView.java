@@ -1,4 +1,4 @@
-package com.stayabode.notes.notesrecyclerview;
+package com.stayabode.notes.view.notesrecyclerview;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-import com.stayabode.notes.model.Note;
+import com.stayabode.notes.data.model.Note;
 
 import java.util.List;
 

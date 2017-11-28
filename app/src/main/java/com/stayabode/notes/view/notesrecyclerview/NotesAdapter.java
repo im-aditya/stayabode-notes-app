@@ -1,4 +1,4 @@
-package com.stayabode.notes.notesrecyclerview;
+package com.stayabode.notes.view.notesrecyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stayabode.notes.R;
-import com.stayabode.notes.model.Note;
+import com.stayabode.notes.data.model.Note;
 
 import java.util.ArrayList;
 import java.util.List;

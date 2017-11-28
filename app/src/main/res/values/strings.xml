@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Notes</string>
     <string name="action_settings">Settings</string>
+    <string name="text_new_note">New Note</string>
+    <string name="new_note_input_hint_text">Write here...</string>
+    <string name="content_desc_add_new_note">Add new note</string>
 </resources>

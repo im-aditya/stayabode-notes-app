@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.stayabode.notes.view.HomeActivity">
 
-    <com.stayabode.notes.notesrecyclerview.NotesRecyclerView
+    <com.stayabode.notes.view.notesrecyclerview.NotesRecyclerView
         android:id="@+id/rv_notes_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

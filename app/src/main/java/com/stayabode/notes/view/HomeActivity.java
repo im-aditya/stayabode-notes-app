@@ -1,19 +1,23 @@
 package com.stayabode.notes.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
 import com.stayabode.notes.R;
-import com.stayabode.notes.model.Note;
-import com.stayabode.notes.notesrecyclerview.NotesRecyclerView;
+import com.stayabode.notes.contract.HomeScreenContract;
+import com.stayabode.notes.data.GlobalConstants;
+import com.stayabode.notes.presenter.HomePresenter;
+import com.stayabode.notes.view.notesrecyclerview.NotesRecyclerView;
+import com.stayabode.notes.data.model.Note;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends CustomActionBarActivity
+public class HomeActivity extends CustomActionBarActivity implements HomeScreenContract.ViewInterface
 {
-
     private NotesRecyclerView mNotesRecyclerView;
 
     @Override
@@ -22,16 +26,10 @@ public class HomeActivity extends CustomActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        final HomePresenter mHomePresenter = new HomePresenter(this);
+
         mNotesRecyclerView = this.findViewById(R.id.rv_notes_list);
         mNotesRecyclerView.init(this);
-
-        String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-
-        List<Note> noteList = new ArrayList<>();
-        noteList.add(new Note("First note", content));
-        noteList.add(new Note("Second note", "Content goes here"));
-        noteList.add(new Note("Third note", content));
-        mNotesRecyclerView.onNewDataReceived(noteList);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener()
@@ -39,8 +37,23 @@ public class HomeActivity extends CustomActionBarActivity
             @Override
             public void onClick(View view)
             {
-
+                mHomePresenter.onFABClick();
             }
         });
+    }
+
+    @Override
+    public void navigateToAddNoteActivity()
+    {
+        Intent intent = new Intent(this, AddNoteActivity.class);
+        this.startActivity(intent);
+    }
+
+    @Override
+    public void navigateToViewActivity(int noteId)
+    {
+        Intent intent = new Intent(this, ViewNoteActivity.class);
+        intent.putExtra(GlobalConstants.CLICKED_NOTE_ID, noteId);
+        this.startActivity(intent);
     }
 }
