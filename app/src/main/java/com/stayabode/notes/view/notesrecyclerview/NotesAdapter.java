@@ -1,6 +1,7 @@
 package com.stayabode.notes.view.notesrecyclerview;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stayabode.notes.R;
-import com.stayabode.notes.data.model.Note;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.stayabode.notes.contract.NotesAppContract;
 
 /**
  * Created by Aditya on 11/26/2017.
@@ -19,18 +17,17 @@ import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
 {
-    private List<Note> mNotesList;
+    private Cursor mCursor;
+    private OnNoteClickListener mItemClickListener;
 
     public NotesAdapter()
     {
-        mNotesList = new ArrayList<>();
+
     }
 
-    public void setData(List<Note> notesList)
+    public void setCursor(Cursor cursor)
     {
-        mNotesList.clear();
-        mNotesList.addAll(notesList);
-
+        mCursor = cursor;
         this.notifyDataSetChanged();
     }
 
@@ -47,18 +44,31 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
     @Override
     public void onBindViewHolder(NotesAdapter.ViewHolder holder, int position)
     {
-        Note note = mNotesList.get(position);
-        holder.setNote(note.getTitle(), note.getContent(), note.getCreationDate());
+        if(!mCursor.moveToPosition(position))
+            return;
+
+        String id = mCursor.getString(mCursor.getColumnIndex(NotesAppContract.NotesTable._ID));
+        String title = mCursor.getString(mCursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_TITLE));
+        String content = mCursor.getString(mCursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_CONTENT));
+        String lastUpdateTimeStamp = mCursor.getString(mCursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_LAST_UPDATE));
+
+        holder.setNote(id, title, content, lastUpdateTimeStamp);
     }
 
     @Override
     public int getItemCount()
     {
-        return mNotesList.size();
+        return mCursor.getCount();
+    }
+
+    public void setOnClickListener(OnNoteClickListener itemClickListener)
+    {
+        mItemClickListener = itemClickListener;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder
     {
+        private String mId;
         private TextView mTitleTextView;
         private TextView mContentTextView;
         private TextView mLastUpdateDateTextView;
@@ -67,16 +77,32 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
         {
             super(itemView);
 
+            itemView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    if(mItemClickListener != null)
+                        mItemClickListener.onNoteClicked(mId);
+                }
+            });
+
             mTitleTextView = itemView.findViewById(R.id.tv_title);
             mContentTextView = itemView.findViewById(R.id.tv_content);
             mLastUpdateDateTextView = itemView.findViewById(R.id.tv_last_update_date);
         }
 
-        public void setNote(String title, String content, String date)
+        public void setNote(String id, String title, String content, String lastUpdateTimestamp)
         {
+            mId = id;
             mTitleTextView.setText(title);
             mContentTextView.setText(content);
-            mLastUpdateDateTextView.setText(date);
+            mLastUpdateDateTextView.setText(lastUpdateTimestamp);
         }
+    }
+
+    public interface OnNoteClickListener
+    {
+        void onNoteClicked(String noteId);
     }
 }

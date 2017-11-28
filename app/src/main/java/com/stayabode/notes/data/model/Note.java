@@ -9,9 +9,6 @@ import java.util.Date;
 
 public class Note
 {
-    private static int count = 0;
-
-    private int id;
     private String title;
     private String content;
 
@@ -20,18 +17,11 @@ public class Note
 
     public Note(String title, String content)
     {
-        this.id = count++;
-
         this.title = title;
         this.content = content;
 
         creationDate = new Date();
         lastUpdated = new Date();
-    }
-
-    public int getId()
-    {
-        return id;
     }
 
     public String getTitle()

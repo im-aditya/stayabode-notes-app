@@ -4,4 +4,11 @@
     <string name="text_new_note">New Note</string>
     <string name="new_note_input_hint_text">Write here...</string>
     <string name="content_desc_add_new_note">Add new note</string>
+
+    <string name="error_msg_for_empty_content">Content should not be empty</string>
+    <string name="error_msg_for_empty_title">Title should not be empty</string>
+    <string name="action_bar_edit_text_default">Edit title</string>
+    <string name="action_bar_edit_text_hint">Add title</string>
+    <string name="note_added">Note added</string>
+    <string name="note_updated">Note updated</string>
 </resources>

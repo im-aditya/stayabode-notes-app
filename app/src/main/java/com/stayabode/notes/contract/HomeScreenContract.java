@@ -8,13 +8,13 @@ public interface HomeScreenContract
 {
     interface ViewInterface
     {
-        void navigateToAddNoteActivity();
-        void navigateToViewActivity(int noteId);
+        void navigateToEditNoteActivity();
+        void navigateToEditNoteActivity(String noteId);
     }
 
     interface PresenterInterface
     {
         void onFABClick();
-        void onNoteCardClick(int noteId);
+        void onNoteCardClick(String noteId);
     }
 }

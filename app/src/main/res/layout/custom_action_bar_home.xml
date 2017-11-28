@@ -12,4 +12,18 @@
         android:text="@string/app_name"
         android:textColor="@android:color/black"
         android:textSize="20sp"/>
+    <EditText
+        android:id="@+id/et_title"
+        android:hint="@string/action_bar_edit_text_hint"
+        android:textColorHint="@android:color/darker_gray"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:inputType="text"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

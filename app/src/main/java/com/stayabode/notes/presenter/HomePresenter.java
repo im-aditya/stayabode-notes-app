@@ -1,7 +1,6 @@
 package com.stayabode.notes.presenter;
 
 import com.stayabode.notes.contract.HomeScreenContract;
-import com.stayabode.notes.data.GlobalConstants;
 
 /**
  * Created by Aditya on 11/28/2017.
@@ -13,19 +12,18 @@ public class HomePresenter implements HomeScreenContract.PresenterInterface
 
     public HomePresenter(HomeScreenContract.ViewInterface homeView)
     {
-
         mHomeView = homeView;
     }
 
     @Override
     public void onFABClick()
     {
-        mHomeView.navigateToAddNoteActivity();
+        mHomeView.navigateToEditNoteActivity();
     }
 
     @Override
-    public void onNoteCardClick(int noteId)
+    public void onNoteCardClick(String noteId)
     {
-        mHomeView.navigateToViewActivity(noteId);
+        mHomeView.navigateToEditNoteActivity(noteId);
     }
 }
