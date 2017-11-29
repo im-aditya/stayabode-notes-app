@@ -53,9 +53,9 @@ public class DatabaseService
     {
         mDb = mNotesAppDbHelper.getReadableDatabase();
         Cursor cursor = mDb.query(NotesAppContract.NotesTable.TABLE_NAME,
-                new String[] { NotesAppContract.NotesTable._ID, NotesAppContract.NotesTable.COLUMN_NOTE_TITLE, NotesAppContract.NotesTable.COLUMN_NOTE_CONTENT, NotesAppContract.NotesTable.COLUMN_NOTE_LAST_UPDATE},
+                new String[]{NotesAppContract.NotesTable._ID, NotesAppContract.NotesTable.COLUMN_NOTE_TITLE, NotesAppContract.NotesTable.COLUMN_NOTE_CONTENT, NotesAppContract.NotesTable.COLUMN_NOTE_LAST_UPDATE},
                 NotesAppContract.NotesTable._ID + "=?",
-                new String[] { noteId },
+                new String[]{noteId},
                 null,
                 null,
                 null);
@@ -66,7 +66,7 @@ public class DatabaseService
         return cursor;
     }
 
-    public int updateNote(String id, String title, String content)
+    public void updateNote(String id, String title, String content)
     {
         mDb = mNotesAppDbHelper.getWritableDatabase();
 
@@ -74,11 +74,21 @@ public class DatabaseService
         values.put(NotesAppContract.NotesTable.COLUMN_NOTE_TITLE, title);
         values.put(NotesAppContract.NotesTable.COLUMN_NOTE_CONTENT, content);
 
-        int returnValue = mDb.update(NotesAppContract.NotesTable.TABLE_NAME,
+        mDb.update(NotesAppContract.NotesTable.TABLE_NAME,
                 values,
                 NotesAppContract.NotesTable._ID + "=?",
-                new String[] {id});
+                new String[]{id});
         mDb.close();
-        return returnValue;
+    }
+
+    public void onDestroy()
+    {
+        mContext = null;
+        mNotesAppDbHelper = null;
+
+        if(mDb != null && mDb.isOpen())
+            mDb.close();
+
+        mDb = null;
     }
 }

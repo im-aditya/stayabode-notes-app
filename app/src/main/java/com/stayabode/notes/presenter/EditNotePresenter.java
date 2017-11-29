@@ -9,7 +9,7 @@ import com.stayabode.notes.data.GlobalConstants;
 
 public class EditNotePresenter implements EditNoteContract.PresenterInterface
 {
-    EditNoteContract.ViewInterface mEditNoteView;
+    private EditNoteContract.ViewInterface mEditNoteView;
 
     public EditNotePresenter(EditNoteContract.ViewInterface editNoteView)
     {
@@ -24,7 +24,6 @@ public class EditNotePresenter implements EditNoteContract.PresenterInterface
             if(isNewNote)
             {
                 mEditNoteView.addNoteToStorage(title, content);
-                mEditNoteView.finishActivity();
             }
             else
             {
@@ -55,5 +54,11 @@ public class EditNotePresenter implements EditNoteContract.PresenterInterface
     public void onBackButtonClicked()
     {
         mEditNoteView.finishActivity();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        mEditNoteView = null;
     }
 }

@@ -20,5 +20,7 @@ public interface EditNoteContract
         boolean isDataValid(String title, String content);
         void onSubmitNoteClicked(boolean isNewNote, String title, String content);
         void onBackButtonClicked();
+
+        void onDestroy();
     }
 }

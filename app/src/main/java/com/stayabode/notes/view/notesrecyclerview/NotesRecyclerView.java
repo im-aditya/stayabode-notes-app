@@ -1,11 +1,14 @@
 package com.stayabode.notes.view.notesrecyclerview;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+
+import com.stayabode.notes.data.model.Note;
+
+import java.util.ArrayList;
 
 /**
  * Created by Aditya on 11/26/2017.
@@ -39,8 +42,14 @@ public class NotesRecyclerView extends RecyclerView
         mNotesAdapter.setOnClickListener(itemClickListener);
     }
 
-    public void onNewDataReceived(Cursor cursor)
+    public void onNewDataReceived(ArrayList<Note> noteList)
     {
-        mNotesAdapter.setCursor(cursor);
+        mNotesAdapter.setNotesList(noteList);
+    }
+
+    public void onDestroy()
+    {
+        mNotesAdapter.onDestroy();
+        mNotesAdapter = null;
     }
 }

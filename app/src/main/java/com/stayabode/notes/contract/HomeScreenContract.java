@@ -16,5 +16,7 @@ public interface HomeScreenContract
     {
         void onFABClick();
         void onNoteCardClick(String noteId);
+
+        void onDestroy();
     }
 }

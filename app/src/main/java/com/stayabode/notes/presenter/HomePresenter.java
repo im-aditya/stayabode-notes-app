@@ -26,4 +26,10 @@ public class HomePresenter implements HomeScreenContract.PresenterInterface
     {
         mHomeView.navigateToEditNoteActivity(noteId);
     }
+
+    @Override
+    public void onDestroy()
+    {
+        mHomeView = null;
+    }
 }

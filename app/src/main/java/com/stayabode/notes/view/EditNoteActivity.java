@@ -2,6 +2,7 @@ package com.stayabode.notes.view;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.stayabode.notes.contract.EditNoteContract;
 import com.stayabode.notes.contract.NotesAppContract;
 import com.stayabode.notes.data.GlobalConstants;
 import com.stayabode.notes.data.db.DatabaseService;
+import com.stayabode.notes.data.model.Note;
 import com.stayabode.notes.presenter.EditNotePresenter;
 
 /**
@@ -74,12 +76,9 @@ public class EditNoteActivity extends CustomActionBarActivity implements EditNot
 
         if(!isNewNote() && mTitleEditView.getText().length() == 0)
         {
-            Cursor cursor = mDatabaseService.getNote(mNoteId);
-            String title = cursor.getString(cursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_TITLE));
-            String content = cursor.getString(cursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_CONTENT));
-
-            mTitleEditView.setText(title);
-            mContentEditText.setText(content);
+            Note n = Note.getNoteById(mNoteId);
+            mTitleEditView.setText(n.getTitle());
+            mContentEditText.setText(n.getContent());
         }
     }
 
@@ -99,15 +98,15 @@ public class EditNoteActivity extends CustomActionBarActivity implements EditNot
     @Override
     public void addNoteToStorage(String title, String content)
     {
-        mDatabaseService.addNote(title, content);
-        Toast.makeText(this, getResources().getString(R.string.note_added), Toast.LENGTH_SHORT).show();
+        //Using asynctask as the operation is very small and fast
+        new AddToDbTask().execute(title, content);
     }
 
     @Override
     public void updateNoteToStorage(String title, String content)
     {
-        mDatabaseService.updateNote(mNoteId, title, content);
-        Toast.makeText(this, getResources().getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
+        //Using asynctask as the operation is very small and fast
+        new UpdateInDbTask().execute(mNoteId, title, content);
     }
 
     private boolean isNewNote()
@@ -133,5 +132,63 @@ public class EditNoteActivity extends CustomActionBarActivity implements EditNot
     public void finishActivity()
     {
         this.finish();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        mEditNotePresenter.onDestroy();
+        mDatabaseService.onDestroy();
+
+        mEditNotePresenter = null;
+        mDatabaseService = null;
+
+        super.onDestroy();
+    }
+
+    class AddToDbTask extends AsyncTask<String, Void, Void>
+    {
+        @Override protected Void doInBackground(String... strings)
+        {
+            long id = mDatabaseService.addNote(strings[0], strings[1]);
+            Cursor noteCursor = mDatabaseService.getNote(String.valueOf(id));
+            String noteId = noteCursor.getString(noteCursor.getColumnIndex(NotesAppContract.NotesTable._ID));
+            String title = noteCursor.getString(noteCursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_TITLE));
+            String content = noteCursor.getString(noteCursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_CONTENT));
+            String lastUpdateTimeStamp = noteCursor.getString(noteCursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_LAST_UPDATE));
+            Note.add(new Note(noteId, title, content, lastUpdateTimeStamp));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            super.onPostExecute(aVoid);
+            Toast.makeText(EditNoteActivity.this, getResources().getString(R.string.note_added), Toast.LENGTH_SHORT).show();
+            finishActivity();
+        }
+    }
+
+    class UpdateInDbTask extends AsyncTask<String, Void, Void>
+    {
+        @Override protected Void doInBackground(String... strings)
+        {
+            mDatabaseService.updateNote(strings[0], strings[1], strings[2]);
+            Cursor noteCursor = mDatabaseService.getNote(mNoteId);
+            String noteId = noteCursor.getString(noteCursor.getColumnIndex(NotesAppContract.NotesTable._ID));
+            String title = noteCursor.getString(noteCursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_TITLE));
+            String content = noteCursor.getString(noteCursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_CONTENT));
+            String lastUpdateTimeStamp = noteCursor.getString(noteCursor.getColumnIndex(NotesAppContract.NotesTable.COLUMN_NOTE_LAST_UPDATE));
+
+            Note.updateNote(noteId, title, content, lastUpdateTimeStamp);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            super.onPostExecute(aVoid);
+            Toast.makeText(EditNoteActivity.this, getResources().getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
+        }
     }
 }

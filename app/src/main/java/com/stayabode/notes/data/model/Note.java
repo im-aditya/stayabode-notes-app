@@ -1,7 +1,6 @@
 package com.stayabode.notes.data.model;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 
 /**
  * Created by Aditya on 11/27/2017.
@@ -9,19 +8,24 @@ import java.util.Date;
 
 public class Note
 {
+    private static ArrayList<Note> sNotesList = new ArrayList<>();
+
+    private String id;
     private String title;
     private String content;
+    private String lastUpdated;
 
-    private Date creationDate;
-    private Date lastUpdated;
-
-    public Note(String title, String content)
+    public Note(String id, String title, String content, String lastUpdated)
     {
+        this.id = id;
         this.title = title;
         this.content = content;
+        this.lastUpdated = lastUpdated;
+    }
 
-        creationDate = new Date();
-        lastUpdated = new Date();
+    public String getId()
+    {
+        return id;
     }
 
     public String getTitle()
@@ -29,31 +33,55 @@ public class Note
         return title;
     }
 
-    public void setTitle(String title)
-    {
-        this.title = title;
-        lastUpdated = new Date();
-    }
-
     public String getContent()
     {
         return content;
     }
 
-    public void setContent(String content)
+    public String getLastUpdated()
     {
+        return lastUpdated;
+    }
+
+    public void updateNote(String title, String content, String lastUpdated)
+    {
+        this.title = title;
         this.content = content;
-        lastUpdated = new Date();
+        this.lastUpdated = lastUpdated;
     }
 
-    public String getCreationDate()
+    public static void setNotesList(ArrayList<Note> notesList)
     {
-        String date = new SimpleDateFormat("MM-dd-yyyy").format(creationDate);
-        return date;
+        Note.sNotesList = notesList;
     }
 
-    public long getLastUpdated()
+    public static ArrayList<Note> getNotesList()
     {
-        return lastUpdated.getTime();
+        return sNotesList;
+    }
+
+    public static Note getNoteById(String noteId)
+    {
+        int len = sNotesList.size();
+        for (int i = 0; i < len; i++)
+        {
+            Note n = sNotesList.get(i);
+            if(n.getId().equals(noteId))
+            {
+                return n;
+            }
+        }
+
+        return null;
+    }
+
+    public static void add(Note note)
+    {
+        sNotesList.add(note);
+    }
+
+    public static void updateNote(String noteId, String title, String content, String lastUpdateTimeStamp)
+    {
+        getNoteById(noteId).updateNote(title, content, lastUpdateTimeStamp);
     }
 }
